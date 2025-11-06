@@ -100,8 +100,46 @@ public class SlangDictionary {
         return true;
     }
 
-    /* TODO: Edit slang word */
+    /**
+     * Add definition to word
+     */
+    public boolean addDefinitionToWord(String word, String definition) {
+        if(!dictionary.containsKey(word)) {
+            return false;
+        }
+        dictionary.get(word).add(definition);
+        return true;
+    }
 
+    /**
+     * Edit slang word
+     */
+    public boolean editSlangWord(String oldWord, String newWord) {
+        if(dictionary.containsKey(newWord)) {
+            return false;
+        }
+        List<String> definitions = dictionary.remove(oldWord);
+        if(definitions == null) {
+            return false;
+        }
+        dictionary.put(newWord, definitions);
+        return true;
+    }
+
+    /**
+     * Edit definition
+     */
+    public boolean editDefinition(String word, int definitionIndex, String newDefinition) {
+        List<String> definitions = dictionary.get(word);
+        if(definitions == null) {
+            return false;
+        }
+        if(definitionIndex < 0 || definitionIndex >= dictionary.size()) {
+            return false;
+        }
+        definitions.set(definitionIndex, newDefinition);
+        return true;
+    }
     /**
      * Delete slang word
      */
@@ -109,6 +147,24 @@ public class SlangDictionary {
         return dictionary.remove(word) != null;
     }
 
+    /**
+     * Delete definition
+     */
+    public boolean deleteDefinition(String word, int definitionIndex) {
+        if (!dictionary.containsKey(word)) {
+            return false;
+        }
+        List<String> definitions = dictionary.get(word);
+        if (definitionIndex < 0 || definitionIndex >= definitions.size()) {
+            return false;
+        }
+        definitions.remove(definitionIndex);
+        // If no definitions left, remove the word
+        if (definitions.isEmpty()) {
+            dictionary.remove(word);
+        }
+        return true;
+    }
     /**
      * Get random slang word
      */
