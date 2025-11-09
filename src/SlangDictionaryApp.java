@@ -130,10 +130,7 @@ public class SlangDictionaryApp {
         List<String> definitions = dictionary.searchBySlangWord(word);
         if(!definitions.isEmpty()) {
             System.out.println("Found: " + word);
-            System.out.println("Definition(s) of " + word + ":");
-            for(int i = 0; i < definitions.size(); i++){
-                System.out.println((i + 1) + ". " + definitions.get(i));
-            }
+            System.out.println("Definition(s) of '" + word + "': " + String.join(" | ", definitions));
         } else {
             System.out.println("Slang word " + word + " not found!");
         }
@@ -145,16 +142,17 @@ public class SlangDictionaryApp {
     private void searchByDefinition() {
         System.out.print("\nEnter a definition: ");
         String keyword = scanner.nextLine().trim();
-
-        List<String> slangs = dictionary.searchByDefinition(keyword);
+        Map<String, List<String>> slangs = dictionary.searchByDefinition(keyword);
         if (!slangs.isEmpty()) {
-            System.out.println("Found: " + keyword);
-            System.out.println("Slang word(s) of " + keyword + ":");
-            for (int i = 0; i < slangs.size(); i++) {
-                System.out.println((i + 1) + ". " + slangs.get(i));
+            System.out.println("Found " + slangs.size() + " slang word(s) with definition containing '" + keyword + "':");
+            int count = 1;
+            for(Map.Entry<String, List<String>> entry : slangs.entrySet()) {
+                System.out.println("\n" + count + ". " + entry.getKey());
+                System.out.println("   Definition(s): " + String.join(" | ", entry.getValue()));
+                count++;
             }
         } else {
-            System.out.println("Definition " + keyword + " does not match any slang word!");
+            System.out.println("\nNo slang words found with definition containing '" + keyword + "'!");
         }
     }
 
@@ -182,7 +180,7 @@ public class SlangDictionaryApp {
         String definition = scanner.nextLine().trim();
 
         if(dictionary.getDictionary().containsKey(slangWord)) {
-            System.out.println("Slang word " + slangWord + " already exists!");
+            System.out.println("Slang word '" + slangWord + "' already exists!");
             System.out.print("Do you want to (1) Overwrite or (2) Duplicate? (1/2): ");
             String choice = scanner.nextLine().trim();
             if(choice.equals("1")) {
@@ -192,7 +190,7 @@ public class SlangDictionaryApp {
                 System.out.println("Slang word overwritten!");
             } else if(choice.equals("2")) {
                 dictionary.addDefinitionToWord(slangWord, definition);
-                System.out.println("New definition added to " + slangWord + "!");
+                System.out.println("New definition added to '" + slangWord + "'!");
             }
         } else {
             if(dictionary.addSlangWord(slangWord, definition)) {
@@ -246,7 +244,7 @@ public class SlangDictionaryApp {
             System.out.println("Slang word not found!");
             return;
         }
-        System.out.println("Definition(s) of " + slangWord + ":");
+        System.out.println("Definition(s) of '" + slangWord + "':");
         for(int i = 0; i < definitions.size(); i++) {
             System.out.println((i + 1) + ". " + definitions.get(i));
         }
@@ -282,11 +280,11 @@ public class SlangDictionaryApp {
             System.out.println("Slang word not found!");
             return;
         }
-        System.out.print("Are you sure you want to delete " + slangWord + "? (yes/no): " );
+        System.out.print("Are you sure you want to delete '" + slangWord + "'? (yes/no): " );
         String choice = scanner.nextLine().trim().toLowerCase();
         if(choice.equals("yes")) {
             if(!dictionary.deleteSlangWord(slangWord)) {
-                System.out.println("Fail to delete slang word " + slangWord + "!");
+                System.out.println("Fail to delete slang word '" + slangWord + "'!");
                 return;
             }
             System.out.println("Slang word deleted successfully!");
@@ -338,7 +336,7 @@ public class SlangDictionaryApp {
         Collections.shuffle(options);
 
         System.out.println("\nQUIZ: GUESS A DEFINITION OF A SLANG WORD");
-        System.out.println("What does " + randomSlangWord + " means?");
+        System.out.println("What does '" + randomSlangWord + "' means?");
         for(int i = 0; i < options.size(); i++) {
             System.out.println((i + 1) + ". " + options.get(i));
         }
@@ -389,7 +387,7 @@ public class SlangDictionaryApp {
 
         Collections.shuffle(options);
         System.out.println("\nQUIZ: GUESS A SLANG WORD FROM A DEFINITION");
-        System.out.println("What does " + definition + " means?");
+        System.out.println("What does '" + definition + "' means?");
         for(int i = 0; i < options.size(); i++) {
             System.out.println((i + 1) + ". " + options.get(i));
         }

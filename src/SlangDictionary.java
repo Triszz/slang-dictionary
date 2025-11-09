@@ -14,6 +14,7 @@ public class SlangDictionary {
         this.dictionary = new HashMap<>();
         this.originalDictionary = new HashMap<>();
         this.searchHistory = new ArrayList<>();
+
     }
 
     /**
@@ -124,12 +125,18 @@ public class SlangDictionary {
     /**
      * Search by definition
      */
-    public List<String> searchByDefinition(String keyword) {
+    public Map<String, List<String>> searchByDefinition(String keyword) {
         addToHistory("Definition: " + keyword);
-        return dictionary.entrySet().stream()
-                .filter(entry -> entry.getValue().stream().anyMatch(def -> def.toLowerCase().contains(keyword.toLowerCase())))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+        Map<String, List<String>> slangs = new LinkedHashMap<>();
+        for(Map.Entry<String, List<String>> entry : dictionary.entrySet()) {
+            for(String def : entry.getValue()) {
+                if(def.toLowerCase().contains(keyword.toLowerCase())) {
+                    slangs.put(entry.getKey(), entry.getValue());
+                    break;
+                }
+            }
+        }
+        return slangs;
     }
 
     /**
