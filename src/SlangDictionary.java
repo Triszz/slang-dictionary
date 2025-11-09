@@ -7,6 +7,7 @@ public class SlangDictionary {
     private final HashMap<String, List<String>> originalDictionary;
     private ArrayList<String> searchHistory;
     private static final String data_file = "dictionary.dat";
+    private static final String original_dictionary = "original_dictionary.dat";
     private static final String history_file = "history.dat";
 
     public SlangDictionary() {
@@ -18,10 +19,13 @@ public class SlangDictionary {
     /**
      * Load slang words from file
      */
-    public void loadFromFile(String filePath) {
+    public void loadDictionaryFromFile(String filePath) {
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             boolean isFirstLine = true;
+
+            dictionary.clear();
+
             while((line = reader.readLine()) != null) {
                 if(line.trim().isEmpty()) continue;
 
@@ -35,12 +39,52 @@ public class SlangDictionary {
                 if(parts.length == 2) {
                     String word = parts[0].trim();
                     String definitions = parts[1].trim();
-                    List<String> defList = Arrays.stream(definitions.split("\\|")).map(String::trim).collect(Collectors.toList());
+                    List<String> defList = Arrays.stream(definitions.split("\\|"))
+                            .map(String::trim)
+                            .collect(Collectors.toList());
                     dictionary.put(word, defList);
                 }
             }
-            originalDictionary.putAll(dictionary);
-            System.out.println("Loaded " + dictionary.size() + " slang words successfully!");
+            System.out.println("Loaded " + dictionary.size() + " slang words from text file!");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Load original dictionary
+     */
+    public void loadOriginalFromFile(String filePath) {
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            boolean isFirstLine = true;
+
+            originalDictionary.clear();
+
+            while((line = reader.readLine()) != null) {
+                if(line.trim().isEmpty()) continue;
+
+                if(isFirstLine && line.contains("Slag")) {
+                    isFirstLine = false;
+                    continue;
+                }
+                isFirstLine = false;
+
+                String[] parts = line.split("`", 2);
+                if(parts.length == 2) {
+                    String word = parts[0].trim();
+                    String definitions = parts[1].trim();
+                    List<String> defList = Arrays.stream(definitions.split("\\|"))
+                            .map(String::trim)
+                            .collect(Collectors.toList());
+
+                    List<String> valueCopy = new ArrayList<>(defList);
+                    originalDictionary.put(word, valueCopy);
+                }
+            }
+            System.out.println("Original dictionary loaded from text file!");
         } catch (FileNotFoundException e) {
             System.out.println("File not found: " + filePath);
         } catch (IOException e) {
@@ -53,7 +97,7 @@ public class SlangDictionary {
      */
     public List<String> searchBySlangWord(String word) {
         addToHistory("Slang word: " + word);
-        return dictionary.getOrDefault(word, null);
+        return dictionary.getOrDefault(word, new ArrayList<>());
     }
 
     /**
@@ -116,6 +160,7 @@ public class SlangDictionary {
      */
     public boolean editSlangWord(String oldWord, String newWord) {
         if(dictionary.containsKey(newWord)) {
+            System.out.println("Dictionary already has this slang word!");
             return false;
         }
         List<String> definitions = dictionary.remove(oldWord);
@@ -134,7 +179,7 @@ public class SlangDictionary {
         if(definitions == null) {
             return false;
         }
-        if(definitionIndex < 0 || definitionIndex >= dictionary.size()) {
+        if(definitionIndex < 0 || definitionIndex >= definitions.size()) {
             return false;
         }
         definitions.set(definitionIndex, newDefinition);
@@ -199,9 +244,21 @@ public class SlangDictionary {
     }
 
     /**
+     * Save original dictionary to file
+     */
+    public void saveOriginalDictionary() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(original_dictionary))) {
+            oos.writeObject(originalDictionary);
+            System.out.println("Original dictionary saved to file!");
+        } catch (IOException e) {
+            System.out.println("Error saving original dictionary: " + e.getMessage());
+        }
+    }
+
+    /**
      * Load dictionary from file
      */
-    public boolean  loadDictionary() {
+    public boolean loadDictionary() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(data_file))) {
             dictionary = (HashMap<String, List<String>>) ois.readObject();
             System.out.println("Dictionary loaded from cached file!");
@@ -211,6 +268,25 @@ public class SlangDictionary {
             return false;
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error loading dictionary: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Load original dictionary from file
+     */
+    public boolean loadOriginalDictionary() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(original_dictionary))) {
+            HashMap<String, List<String>> loaded = (HashMap<String, List<String>>) ois.readObject();
+            originalDictionary.clear();
+            originalDictionary.putAll(loaded);
+            System.out.println("Original dictionary loaded from cache!");
+            return true;
+        } catch (FileNotFoundException e) {
+            System.out.println("No cached original dictionary found.");
+            return false;
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading original dictionary: " + e.getMessage());
             return false;
         }
     }
