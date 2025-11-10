@@ -53,7 +53,7 @@ public class SlangDictionaryApp {
         System.out.println("9. Quiz: Guess a definition");
         System.out.println("10. Quiz: Guess a slang word");
         System.out.println("0. Exit");
-        System.out.print("Chose an option: ");
+        System.out.print("\nChose an option: ");
     }
 
     /**
@@ -105,7 +105,7 @@ public class SlangDictionaryApp {
                         System.out.println("Invalid option! Please try again.");
                 }
             } catch (Exception e) {
-                System.err.println("✗ An error occurred: " + e.getMessage());
+                System.err.println("An error occurred: " + e.getMessage());
                 scanner.nextLine();
             }
         }
@@ -176,7 +176,7 @@ public class SlangDictionaryApp {
     private void addSlangWord() {
         System.out.print("\nEnter slang word: ");
         String slangWord = scanner.nextLine().trim();
-        System.out.println("Enter definition: ");
+        System.out.print("Enter definition: ");
         String definition = scanner.nextLine().trim();
 
         if(dictionary.getDictionary().containsKey(slangWord)) {
@@ -201,18 +201,8 @@ public class SlangDictionaryApp {
         }
     }
 
-    private void handleEditSlangWord(String slangWord) {
-        System.out.print("Enter new slang word: ");
-        String newSlangWord = scanner.nextLine().trim();
-        if(!dictionary.editSlangWord(slangWord, newSlangWord)) {
-            System.out.println("Fail to update slang word!");
-            return;
-        }
-        System.out.println("Slang word updated successfully!");
-    }
-
     private void handleEditDefinition(String slangWord, int defSize) {
-        System.out.print("Enter definition index to edit (1-" + defSize + "): ");
+        System.out.print("\nEnter definition index to edit (1-" + defSize + "): ");
         try {
             int index = scanner.nextInt() - 1;
             scanner.nextLine();
@@ -244,29 +234,8 @@ public class SlangDictionaryApp {
             System.out.println("Slang word not found!");
             return;
         }
-        System.out.println("Definition(s) of '" + slangWord + "':");
-        for(int i = 0; i < definitions.size(); i++) {
-            System.out.println((i + 1) + ". " + definitions.get(i));
-        }
-        System.out.print("Do you want to edit slang word (1) or definition (2) or both (3)? (1/2/3): ");
-        String choice = scanner.nextLine().trim();
-        if(choice.equals("1")) {
-            handleEditSlangWord(slangWord);
-        } else if(choice.equals("2")) {
-            handleEditDefinition(slangWord, definitions.size());
-        } else if(choice.equals("3")) {
-            System.out.print("Enter new slang word: ");
-            String newSlangWord = scanner.nextLine().trim();
-            if(!dictionary.editSlangWord(slangWord, newSlangWord)) {
-                System.out.println("Fail to update slang word!");
-                return;
-            }
-            System.out.println("Slang word updated successfully!");
-            handleEditDefinition(newSlangWord, definitions.size());
-        } else {
-            System.out.println("Invalid choice!");
-            return;
-        }
+        System.out.println("Definition(s) of '" + slangWord + "': " + String.join(" | ", definitions));
+        handleEditDefinition(slangWord, definitions.size());
     }
 
     /**
