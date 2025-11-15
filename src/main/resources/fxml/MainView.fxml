@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="MainController"
+            prefHeight="700.0" prefWidth="1000.0">
+
+    <!-- Top: Title -->
+    <top>
+        <VBox alignment="CENTER" style="-fx-background-color: #2196F3;">
+            <padding>
+                <Insets top="20" bottom="20"/>
+            </padding>
+            <Label text="SLANG DICTIONARY" textFill="white">
+                <font>
+                    <Font name="System Bold" size="28"/>
+                </font>
+            </Label>
+        </VBox>
+    </top>
+
+    <!-- Center: Main Content -->
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+
+            <!-- Tab 1: Search -->
+            <Tab text="Search">
+                <VBox spacing="15" style="-fx-padding: 20;">
+
+                    <!-- Search by Slang Word -->
+                    <VBox spacing="10">
+                        <Label text="Search by Slang Word:" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                        <HBox spacing="10">
+                            <TextField fx:id="searchSlangField" promptText="Enter slang word..."
+                                       HBox.hgrow="ALWAYS" prefWidth="400"/>
+                            <Button text="Search" onAction="#handleSearchBySlang"
+                                    style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Search by Definition -->
+                    <VBox spacing="10">
+                        <Label text="Search by Definition:" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                        <HBox spacing="10">
+                            <TextField fx:id="searchDefField" promptText="Enter keyword in definition..."
+                                       HBox.hgrow="ALWAYS" prefWidth="400"/>
+                            <Button text="Search" onAction="#handleSearchByDefinition"
+                                    style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Results Area -->
+                    <VBox spacing="10" VBox.vgrow="ALWAYS">
+                        <Label text="Results:" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                        <TextArea fx:id="resultsArea" editable="false"
+                                  wrapText="true" VBox.vgrow="ALWAYS"
+                                  style="-fx-font-family: 'Courier New'; -fx-font-size: 13;"/>
+                    </VBox>
+
+                </VBox>
+            </Tab>
+
+            <!-- Tab 2: Add/Edit -->
+            <Tab text="Add/Edit">
+                <VBox spacing="15" style="-fx-padding: 20;">
+
+                    <!-- Add New Slang Word -->
+                    <VBox spacing="10">
+                        <Label text="Add New Slang Word:" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                        <HBox spacing="10">
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Slang Word:"/>
+                                <TextField fx:id="addSlangField" promptText="e.g., LOL"/>
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Definition:"/>
+                                <TextField fx:id="addDefField" promptText="e.g., laugh out loud"/>
+                            </VBox>
+                        </HBox>
+                        <Button text="Add Slang Word" onAction="#handleAddSlang"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                    </VBox>
+
+                    <Separator/>
+
+                    <!-- Edit/Delete -->
+                    <VBox spacing="10">
+                        <Label text="Edit/Delete Slang Word:" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+                        <HBox spacing="10">
+                            <TextField fx:id="editSlangField" promptText="Enter slang word to edit/delete..."
+                                       HBox.hgrow="ALWAYS"/>
+                            <Button text="Load" onAction="#handleLoadForEdit"
+                                    style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                        </HBox>
+
+                        <TextArea fx:id="editResultArea" editable="false"
+                                  prefHeight="150" wrapText="true"/>
+
+                        <HBox spacing="10">
+                            <Button text="Delete" onAction="#handleDelete"
+                                    style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                            <Button text="Edit" onAction="#handleEdit"
+                                    style="-fx-background-color: #FF9800; -fx-text-fill: white;"/>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </Tab>
+
+            <!-- Tab 3: Random & Quiz -->
+            <Tab text="Random &amp; Quiz">
+                <VBox spacing="20" style="-fx-padding: 20;" alignment="TOP_CENTER">
+
+                    <!-- Random Word -->
+                    <VBox spacing="10" alignment="CENTER">
+                        <Label text="Today's Slang Word" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+                        <Button text="Show Random Slang Word" onAction="#handleRandom"
+                                style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-size: 14;"/>
+                        <TextArea fx:id="randomArea" editable="false"
+                                  prefHeight="150" prefWidth="600" wrapText="true"/>
+                    </VBox>
+
+                    <Separator prefWidth="600"/>
+
+                    <!-- Quiz -->
+                    <VBox spacing="10" alignment="CENTER">
+                        <Label text="Quiz Time!" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+                        <Label text="Choose the quiz game to start." style="-fx-font-weight: normal; -fx-font-size: 14"/>
+                        <HBox spacing="10" alignment="CENTER">
+                            <Button text="Quiz: Guess Definition" onAction="#handleQuizDefinition"
+                                    style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
+                            <Button text="Quiz: Guess Slang Word" onAction="#handleQuizSlang"
+                                    style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </Tab>
+
+            <!-- Tab 4: History -->
+            <Tab text="History">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Search History" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+                        <Button text="Refresh" onAction="#handleRefreshHistory"
+                                style="-fx-background-color: #607D8B; -fx-text-fill: white;"/>
+                        <Button text="Clear History" onAction="#handleClearHistory"
+                                style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <ListView fx:id="historyListView" VBox.vgrow="ALWAYS"/>
+                    <Separator/>
+
+                    <VBox spacing="10" alignment="CENTER">
+                        <Label text="Danger Zone" style="-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: #f44336;"/>
+                        <Button text="Reset Dictionary to Original" onAction="#handleResetDictionary"
+                                style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 13;"/>
+                        <Label text="Warning: This will delete all your changes!"
+                               style="-fx-font-size: 11; -fx-text-fill: #888;"/>
+                    </VBox>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+    <!-- Bottom: Status Bar -->
+    <bottom>
+        <HBox style="-fx-background-color: #f5f5f5; -fx-padding: 10;">
+            <Label fx:id="statusLabel" text="Ready" style="-fx-font-size: 12;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
