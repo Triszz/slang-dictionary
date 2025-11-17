@@ -57,7 +57,7 @@ public class SlangDictionary {
                             }
                         }
 
-                        System.out.println("⚠ Duplicate #" + duplicateCount + ": '" + word +
+                        System.out.println("Duplicate #" + duplicateCount + ": '" + word +
                                 "' - Merged " + defList.size() + " definition(s)");
                     } else {
                         dictionary.put(word, defList);
@@ -67,12 +67,12 @@ public class SlangDictionary {
 
             System.out.println("✓ Loaded " + dictionary.size() + " slang words from text file!");
             if(duplicateCount > 0) {
-                System.out.println("⚠ Found and merged " + duplicateCount + " duplicate slang words");
+                System.out.println("Found and merged " + duplicateCount + " duplicate slang words");
             }
         } catch (FileNotFoundException e) {
-            System.out.println("✗ File not found: " + filePath);
+            System.out.println("File not found: " + filePath);
         } catch (IOException e) {
-            System.out.println("✗ Error reading file: " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         }
     }
 
@@ -121,12 +121,12 @@ public class SlangDictionary {
             }
             System.out.println("✓ Original dictionary loaded from text file!");
             if(duplicateCount > 0) {
-                System.out.println("⚠ Found and merged " + duplicateCount + " duplicate slang words in original");
+                System.out.println("Found and merged " + duplicateCount + " duplicate slang words in original");
             }
         } catch (FileNotFoundException e) {
-            System.out.println("✗ File not found: " + filePath);
+            System.out.println("File not found: " + filePath);
         } catch (IOException e) {
-            System.out.println("✗ Error reading file: " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         }
     }
 
